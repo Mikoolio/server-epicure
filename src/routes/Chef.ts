@@ -3,10 +3,10 @@ import controller from '../controllers/Chef';
 
 const router = express.Router();
 
-router.post('/create', controller.createChef);
-router.get('/get/:chefId', controller.readChef);
-router.get('/get', controller.readAllChef);
-router.patch('/update/:chefId', controller.updateChef);
-router.delete('/delete/:chefId', controller.deleteChef);
+router.post('/', controller.createChef);
+router.get('/:chefId', controller.readChef);
+router.get('/', controller.readAllChef);
+router.patch('/:chefId', controller.updateChef);
+router.delete('/:chefId', controller.deleteChef);
 
 export = router;

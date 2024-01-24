@@ -3,10 +3,10 @@ import controller from '../controllers/Restaurant';
 
 const router = express.Router();
 
-router.post('/create', controller.createRestaurant);
-router.get('/get/:restaurantId', controller.readRestaurant);
-router.get('/get', controller.readAllRestaurant);
-router.patch('/update/:restaurantId', controller.updateRestaurant);
-router.delete('/delete/:restaurantId', controller.deleteRestaurant);
+router.post('/', controller.createRestaurant);
+router.get('/:restaurantId', controller.readRestaurant);
+router.get('/', controller.readAllRestaurant);
+router.patch('/:restaurantId', controller.updateRestaurant);
+router.delete('/:restaurantId', controller.deleteRestaurant);
 
 export = router;
