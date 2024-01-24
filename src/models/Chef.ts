@@ -2,13 +2,17 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IChef {
     name: string;
+    image: string;
+    info: string;
 }
 
 export interface IChefModel extends IChef, Document {}
 
 const ChefSchema: Schema = new Schema(
     {
-        name: { type: String, required: true }
+        name: { type: String, required: true },
+        image: { type: String, required: true },
+        info: { type: String, required: false }
     },
     {
         versionKey: false

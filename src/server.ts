@@ -3,6 +3,7 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import Logging from './library/Logging';
+import chefRoutes from './routes/chef';
 
 const router = express();
 
@@ -43,7 +44,7 @@ const StartServer = () => {
         next();
     });
     // router.use('/restaurant', restaurantRoutes);
-    // router.use('/chef', chefRoutes);
+    router.use('/chef', chefRoutes);
 
     router.get('/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
 
