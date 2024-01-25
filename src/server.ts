@@ -3,7 +3,7 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import Logging from './library/Logging';
-import chefRoutes from './routes/chef';
+import chefRoutes from './routes/Chef';
 import restaurantRoutes from './routes/Restaurant';
 
 const router = express();

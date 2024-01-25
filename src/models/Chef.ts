@@ -3,14 +3,16 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IChef {
     name: string;
     image: string;
+    restaurant: string[];
     info: string;
 }
 
 export interface IChefModel extends IChef, Document {}
 
-const ChefSchema: Schema = new Schema(
+const chefSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
+        restaurant: { type: [String], required: true },
         image: { type: String, required: true },
         info: { type: String, required: false }
     },
@@ -19,4 +21,4 @@ const ChefSchema: Schema = new Schema(
     }
 );
 
-export default mongoose.model<IChefModel>('Chef', ChefSchema);
+export default mongoose.model<IChefModel>('Chef', chefSchema);

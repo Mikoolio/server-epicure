@@ -1,18 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import Chef from '../models/Chef';
+import chefService from '../services/chefService';
 
 const createChef = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, image, info } = req.body;
-    const chef = new Chef({
-        _id: new mongoose.Types.ObjectId(),
-        name,
-        image,
-        info
-    });
-
+    const { name, image, restaurant, info } = req.body;
     try {
-        const savedChef = await chef.save();
+        const savedChef = await chefService.createChef(name, image, restaurant, info);
         res.status(201).json({ chef: savedChef });
     } catch (error) {
         res.status(500).json({ error });
@@ -21,9 +13,8 @@ const createChef = async (req: Request, res: Response, next: NextFunction) => {
 
 const readChef = async (req: Request, res: Response, next: NextFunction) => {
     const chefId = req.params.chefId;
-
     try {
-        const chef = await Chef.findById(chefId);
+        const chef = await chefService.readChef(chefId);
         if (chef) {
             res.status(200).json({ chef });
         } else {
@@ -34,9 +25,9 @@ const readChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const readAllChef = async (req: Request, res: Response, next: NextFunction) => {
+const readAllChefs = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const chefs = await Chef.find();
+        const chefs = await chefService.readAllChefs();
         res.status(200).json({ chefs });
     } catch (error) {
         res.status(500).json({ error });
@@ -45,12 +36,9 @@ const readAllChef = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateChef = async (req: Request, res: Response, next: NextFunction) => {
     const chefId = req.params.chefId;
-
     try {
-        const chef = await Chef.findById(chefId);
-        if (chef) {
-            chef.set(req.body);
-            const updatedChef = await chef.save();
+        const updatedChef = await chefService.updateChef(chefId, req.body);
+        if (updatedChef) {
             res.status(201).json({ chef: updatedChef });
         } else {
             res.status(404).json({ message: 'Not found' });
@@ -62,9 +50,8 @@ const updateChef = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteChef = async (req: Request, res: Response, next: NextFunction) => {
     const chefId = req.params.chefId;
-
     try {
-        const deletedChef = await Chef.findByIdAndDelete(chefId);
+        const deletedChef = await chefService.deleteChef(chefId);
         if (deletedChef) {
             res.status(201).json({ chef: deletedChef, message: 'Deleted' });
         } else {
@@ -75,4 +62,4 @@ const deleteChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export default { createChef, readAllChef, readChef, updateChef, deleteChef };
+export default { createChef, readChef, readAllChefs, updateChef, deleteChef };
