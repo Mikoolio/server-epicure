@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { IChef, IChefModel } from './Chef';
+import { IChefModel } from './Chef';
 
 interface IRating {
     ratingImg: string;
@@ -8,7 +8,7 @@ interface IRating {
 
 export interface IRestaurant {
     name: string;
-    chef: IChef | IChefModel['_id'];
+    chef: IChefModel['_id'];
     openingDate: string;
     openingHours: string;
     rating: IRating;

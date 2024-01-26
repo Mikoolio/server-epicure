@@ -21,11 +21,11 @@ const createRestaurant = async (
 };
 
 const readRestaurant = async (restaurantId: string) => {
-    return await Restaurant.findById(restaurantId).populate('chef');
+    return await Restaurant.findById(restaurantId);
 };
 
 const readAllRestaurants = async () => {
-    return await Restaurant.find().populate('chef');
+    return await Restaurant.find();
 };
 
 const updateRestaurant = async (restaurantId: string, updates: Partial<IRestaurantModel>) => {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import chefService from '../services/chefService';
 
-const createChef = async (req: Request, res: Response, next: NextFunction) => {
+const createChef = async (req: Request, res: Response) => {
     const { name, image, restaurant, info } = req.body;
     try {
         const savedChef = await chefService.createChef(name, image, restaurant, info);
@@ -11,11 +11,12 @@ const createChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const readChef = async (req: Request, res: Response, next: NextFunction) => {
+const readChef = async (req: Request, res: Response) => {
     const chefId = req.params.chefId;
     try {
         const chef = await chefService.readChef(chefId);
         if (chef) {
+            console.log(chef);
             res.status(200).json({ chef });
         } else {
             res.status(404).json({ message: 'Not found' });
@@ -25,7 +26,7 @@ const readChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const readAllChefs = async (req: Request, res: Response, next: NextFunction) => {
+const readAllChefs = async (req: Request, res: Response) => {
     try {
         const chefs = await chefService.readAllChefs();
         res.status(200).json({ chefs });
@@ -34,7 +35,7 @@ const readAllChefs = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
-const updateChef = async (req: Request, res: Response, next: NextFunction) => {
+const updateChef = async (req: Request, res: Response) => {
     const chefId = req.params.chefId;
     try {
         const updatedChef = await chefService.updateChef(chefId, req.body);
@@ -48,7 +49,7 @@ const updateChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const deleteChef = async (req: Request, res: Response, next: NextFunction) => {
+const deleteChef = async (req: Request, res: Response) => {
     const chefId = req.params.chefId;
     try {
         const deletedChef = await chefService.deleteChef(chefId);
@@ -62,4 +63,18 @@ const deleteChef = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export default { createChef, readChef, readAllChefs, updateChef, deleteChef };
+const getChefRestaurants = async (req: Request, res: Response) => {
+    const chefId = req.params.chefId;
+    try {
+        const restaurants = await chefService.getChefRestaurants(chefId);
+        if (restaurants) {
+            res.status(200).json({ restaurants });
+        } else {
+            res.status(404).json({ message: 'Not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+export default { createChef, readChef, readAllChefs, updateChef, deleteChef, getChefRestaurants };

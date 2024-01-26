@@ -25,7 +25,7 @@ const updateChef = async (chefId: string, updates: Partial<IChefModel>) => {
     const chef = await Chef.findById(chefId);
     if (chef) {
         for (const field in updates) {
-            if (field === 'name' || field === 'image' || field === 'restaurant' || field === 'info') {
+            if (field === 'name' || field === 'image' || field === 'restaurants' || field === 'info') {
                 chef[field] = updates[field] as any;
             }
         }
@@ -38,4 +38,12 @@ const deleteChef = async (chefId: string) => {
     return await Chef.findByIdAndDelete(chefId);
 };
 
-export default { createChef, readChef, readAllChefs, updateChef, deleteChef };
+const getChefRestaurants = async (chefId: string) => {
+    const chef = await Chef.findById(chefId);
+    if (chef) {
+        return chef.restaurants;
+    }
+    return null;
+};
+
+export default { createChef, readChef, readAllChefs, updateChef, deleteChef, getChefRestaurants };
