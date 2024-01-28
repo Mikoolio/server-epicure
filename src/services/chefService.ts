@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import Chef, { IChefModel } from '../models/Chef';
 
-const createChef = async (name: string, image: string, restaurant: string[], info: string) => {
+const createChef = async (name: string, image: string, restaurants: string[], info: string) => {
     const chef = new Chef({
         _id: new mongoose.Types.ObjectId(),
         name,
         image,
-        restaurant,
+        restaurants,
         info
     });
 

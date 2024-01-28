@@ -1,22 +1,20 @@
 import { config } from './config/config';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
-import mongoose from 'mongoose';
 import Logging from './library/Logging';
 import chefRoutes from './routes/Chef';
 import restaurantRoutes from './routes/Restaurant';
 import dishRoutes from './routes/Dish';
+import connectToDatabase from './connections/dbConnection';
 
 const router = express();
 
-mongoose
-    .connect(config.mongo.url)
+connectToDatabase()
     .then(() => {
-        Logging.info('connected to mongodb');
         StartServer();
     })
     .catch((error) => {
-        Logging.error('unable to connect');
+        Logging.error('Unable to start server');
         Logging.error(error);
     });
 
@@ -51,11 +49,16 @@ const StartServer = () => {
 
     router.use((req, res, next) => {
         const error = new Error('Not found');
-
         Logging.error(error);
 
-        res.status(404).json({
-            message: error.message
+        next(error);
+    });
+
+    router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        Logging.error(err);
+        const statusCode = (err as any).status || 500;
+        res.status(statusCode).json({
+            message: err.message || 'Internal Server Error'
         });
     });
 

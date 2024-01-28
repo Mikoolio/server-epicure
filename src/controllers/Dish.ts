@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import dishService from '../services/dishService';
+import mongoose from 'mongoose';
 
-const createDish = async (req: Request, res: Response) => {
+const createDish = async (req: Request, res: Response, next: NextFunction) => {
     const { name, restaurant, ingredients, price, image, icon } = req.body;
     try {
         const savedDish = await dishService.createDish(name, restaurant, ingredients, price, image, icon);
         res.status(201).json({ dish: savedDish });
     } catch (error) {
-        res.status(500).json({ error });
+        next(error);
     }
 };
 
-const readDish = async (req: Request, res: Response) => {
+const readDish = async (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.dishId;
     try {
         const dish = await dishService.readDish(dishId);
@@ -21,20 +22,20 @@ const readDish = async (req: Request, res: Response) => {
             res.status(404).json({ message: 'Not found' });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        next(error);
     }
 };
 
-const readAllDishes = async (req: Request, res: Response) => {
+const readAllDishes = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const dishes = await dishService.readAllDishes();
         res.status(200).json({ dishes });
     } catch (error) {
-        res.status(500).json({ error });
+        next(error);
     }
 };
 
-const deleteDish = async (req: Request, res: Response) => {
+const deleteDish = async (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.dishId;
     try {
         const deletedDish = await dishService.deleteDish(dishId);
@@ -44,18 +45,19 @@ const deleteDish = async (req: Request, res: Response) => {
             res.status(404).json({ message: 'Not found' });
         }
     } catch (error) {
-        res.status(500).json({ error });
+        next(error);
     }
 };
 
-const getAllDishesForRestaurant = async (req: Request, res: Response) => {
+const getDishesByRestaurantId = async (req: Request, res: Response, next: NextFunction) => {
     const restaurantId = req.params.restaurantId;
     try {
-        const dishes = await dishService.getAllDishesForRestaurant(restaurantId);
+        const dishes = await dishService.getDishesByRestaurantId(restaurantId);
         res.status(200).json({ dishes });
     } catch (error) {
-        res.status(500).json({ error });
+        console.error('Error getting dishes:', error);
+        next(error);
     }
 };
 
-export default { createDish, readDish, readAllDishes, deleteDish, getAllDishesForRestaurant };
+export default { createDish, readDish, readAllDishes, deleteDish, getDishesByRestaurantId };
