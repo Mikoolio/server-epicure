@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Dish from '../models/Dish';
+import Dish, { IDishModel } from '../models/Dish';
 
 const createDish = async (name: string, restaurant: string, ingredients: string[], price: number, image: string, icon: string) => {
     const dish = new Dish({
@@ -27,8 +27,9 @@ const deleteDish = async (dishId: string) => {
     return await Dish.findByIdAndDelete(dishId);
 };
 
-const getAllDishesForRestaurant = async (restaurantId: string) => {
-    return await Dish.find({ restaurant: new mongoose.Types.ObjectId(restaurantId) });
+const getDishesByRestaurantId = async (restaurantId: string): Promise<IDishModel[]> => {
+    const dishes = await Dish.find({ restaurant_id: restaurantId }).exec();
+    return dishes;
 };
 
-export default { createDish, readDish, readAllDishes, deleteDish, getAllDishesForRestaurant };
+export default { createDish, readDish, readAllDishes, deleteDish, getDishesByRestaurantId };
