@@ -7,7 +7,7 @@ import restaurantRoutes from './routes/Restaurant';
 import dishRoutes from './routes/Dish';
 import connectToDatabase from './connections/dbConnection';
 
-const router = express();
+const app = express();
 
 connectToDatabase()
     .then(() => {
@@ -19,7 +19,7 @@ connectToDatabase()
     });
 
 const StartServer = () => {
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         Logging.info(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
         res.on('finish', () => {
@@ -29,10 +29,10 @@ const StartServer = () => {
         next();
     });
 
-    router.use(express.urlencoded({ extended: true }));
-    router.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
 
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
@@ -43,18 +43,18 @@ const StartServer = () => {
 
         next();
     });
-    router.use('/api/restaurants', restaurantRoutes);
-    router.use('/api/chefs', chefRoutes);
-    router.use('/api/dishes', dishRoutes);
+    app.use('/api/restaurants', restaurantRoutes);
+    app.use('/api/chefs', chefRoutes);
+    app.use('/api/dishes', dishRoutes);
 
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         const error = new Error('Not found');
         Logging.error(error);
 
         next(error);
     });
 
-    router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         Logging.error(err);
         const statusCode = (err as any).status || 500;
         res.status(statusCode).json({
@@ -62,5 +62,5 @@ const StartServer = () => {
         });
     });
 
-    http.createServer(router).listen(config.server.port, () => Logging.info(`Server is running on port ${config.server.port}`));
+    http.createServer(app).listen(config.server.port, () => Logging.info(`Server is running on port ${config.server.port}`));
 };
