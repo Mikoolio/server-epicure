@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Restaurant, { IRestaurantModel } from '../models/Restaurant';
+import Chef from '../models/Chef';
 
 const createRestaurant = async (
     name: string,
@@ -25,7 +26,8 @@ const readRestaurant = async (restaurantId: string) => {
 };
 
 const readAllRestaurants = async () => {
-    return await Restaurant.find();
+    const restaurants = await Restaurant.find().populate('chef', 'name');
+    return restaurants;
 };
 
 const updateRestaurant = async (restaurantId: string, updates: Partial<IRestaurantModel>) => {

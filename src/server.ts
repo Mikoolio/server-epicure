@@ -43,9 +43,9 @@ const StartServer = () => {
 
         next();
     });
-    router.use('/restaurant', restaurantRoutes);
-    router.use('/chef', chefRoutes);
-    router.use('/dish', dishRoutes);
+    router.use('/api/restaurants', restaurantRoutes);
+    router.use('/api/chefs', chefRoutes);
+    router.use('/api/dishes', dishRoutes);
 
     router.use((req, res, next) => {
         const error = new Error('Not found');
