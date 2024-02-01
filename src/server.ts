@@ -43,6 +43,7 @@ const StartServer = () => {
 
         next();
     });
+
     app.use('/api/restaurants', restaurantRoutes);
     app.use('/api/chefs', chefRoutes);
     app.use('/api/dishes', dishRoutes);
