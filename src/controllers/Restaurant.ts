@@ -5,7 +5,7 @@ const createRestaurant = async (req: Request, res: Response, next: NextFunction)
     const { name, chef, openingDate, openingHours, rating } = req.body;
     try {
         const savedRestaurant = await restaurantService.createRestaurant(name, chef, openingDate, openingHours, rating);
-        res.status(201).send({ restaurant: savedRestaurant });
+        res.status(201).json({ restaurant: savedRestaurant });
     } catch (error) {
         next(error);
     }
@@ -16,9 +16,9 @@ const readRestaurant = async (req: Request, res: Response, next: NextFunction) =
     try {
         const restaurant = await restaurantService.readRestaurant(restaurantId);
         if (restaurant) {
-            res.status(200).send({ restaurant });
+            res.status(200).json({ restaurant });
         } else {
-            res.status(404).send({ message: 'Not found' });
+            res.status(404).json({ message: 'Not found' });
         }
     } catch (error) {
         next(error);
@@ -27,8 +27,9 @@ const readRestaurant = async (req: Request, res: Response, next: NextFunction) =
 
 const readAllRestaurants = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const restaurants = await restaurantService.readAllRestaurants();
-        res.status(200).send({ restaurants });
+        const filterBy = req.query.filterBy as string;
+        const restaurants = await restaurantService.readAllRestaurants(filterBy);
+        res.status(200).json({ restaurants });
     } catch (error) {
         next(error);
     }
@@ -39,9 +40,9 @@ const updateRestaurant = async (req: Request, res: Response, next: NextFunction)
     try {
         const updatedRestaurant = await restaurantService.updateRestaurant(restaurantId, req.body);
         if (updatedRestaurant) {
-            res.status(201).send({ restaurant: updatedRestaurant });
+            res.status(201).json({ restaurant: updatedRestaurant });
         } else {
-            res.status(404).send({ message: 'Not found' });
+            res.status(404).json({ message: 'Not found' });
         }
     } catch (error) {
         next(error);
@@ -53,9 +54,9 @@ const deleteRestaurant = async (req: Request, res: Response, next: NextFunction)
     try {
         const deletedRestaurant = await restaurantService.deleteRestaurant(restaurantId);
         if (deletedRestaurant) {
-            res.status(201).send({ restaurant: deletedRestaurant, message: 'Deleted' });
+            res.status(201).json({ restaurant: deletedRestaurant, message: 'Deleted' });
         } else {
-            res.status(404).send({ message: 'Not found' });
+            res.status(404).json({ message: 'Not found' });
         }
     } catch (error) {
         next(error);

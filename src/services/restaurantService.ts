@@ -25,8 +25,10 @@ const readRestaurant = async (restaurantId: string) => {
     return await Restaurant.findById(restaurantId);
 };
 
-const readAllRestaurants = async () => {
-    const restaurants = await Restaurant.find().populate('chef', 'name');
+const readAllRestaurants = async (filterBy: string) => {
+    const criteria = _buildCriteria(filterBy);
+    const restaurants = await Restaurant.find(criteria).populate('chef', 'name');
+    console.log(criteria);
     return restaurants;
 };
 
@@ -45,6 +47,73 @@ const updateRestaurant = async (restaurantId: string, updates: Partial<IRestaura
 
 const deleteRestaurant = async (restaurantId: string) => {
     return await Restaurant.findByIdAndDelete(restaurantId);
+};
+
+const _buildCriteria = (filterBy: string) => {
+    const currentYear = new Date().getFullYear();
+    const lastYear = currentYear - 1;
+    console.log(filterBy);
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    switch (filterBy) {
+        case 'Open Now':
+            return {
+                $expr: {
+                    $let: {
+                        vars: {
+                            opening_hours: {
+                                $split: ['$opening_hours', ' - ']
+                            }
+                        },
+                        in: {
+                            $and: [
+                                {
+                                    $gte: [
+                                        currentTime,
+                                        {
+                                            $arrayElemAt: ['$$opening_hours', 0]
+                                        }
+                                    ]
+                                },
+                                {
+                                    $lte: [
+                                        currentTime,
+                                        {
+                                            $arrayElemAt: ['$$opening_hours', 1]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+        case 'New':
+            return {
+                $expr: {
+                    $eq: [
+                        {
+                            $year: {
+                                $dateFromString: {
+                                    dateString: '$opening_date',
+                                    format: '%Y-%m-%d'
+                                }
+                            }
+                        },
+                        lastYear
+                    ]
+                }
+            };
+
+        case 'Most Popular':
+            return {
+                'rating.number': 5
+            };
+
+        default:
+            return {};
+    }
 };
 
 export default { createRestaurant, readRestaurant, readAllRestaurants, updateRestaurant, deleteRestaurant };
