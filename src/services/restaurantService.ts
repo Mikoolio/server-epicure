@@ -28,7 +28,6 @@ const readRestaurant = async (restaurantId: string) => {
 const readAllRestaurants = async (filterBy: string) => {
     const criteria = _buildCriteria(filterBy);
     const restaurants = await Restaurant.find(criteria).populate('chef', 'name');
-    console.log(criteria);
     return restaurants;
 };
 
@@ -52,7 +51,6 @@ const deleteRestaurant = async (restaurantId: string) => {
 const _buildCriteria = (filterBy: string) => {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
-    console.log(filterBy);
     const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     switch (filterBy) {

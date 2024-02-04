@@ -1,9 +1,6 @@
 import Joi, { ObjectSchema } from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import Logging from '../library/Logging';
-import { IChef } from '../models/Chef';
-import { IRestaurant } from '../models/Restaurant';
-import { IDishModel } from '../models/Dish';
 
 export const ValidateSchema = (schema: ObjectSchema) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -17,21 +14,17 @@ export const ValidateSchema = (schema: ObjectSchema) => {
     };
 };
 
-export const chefCreateSchema: ObjectSchema = Joi.object<IChef>({
+const baseChefSchema = Joi.object({
     name: Joi.string().required().min(3).max(50),
     image: Joi.string().uri().allow(''),
     restaurants: Joi.array().items(Joi.string()),
     info: Joi.string().allow('')
 });
 
-export const chefUpdateSchema: ObjectSchema = Joi.object<IChef>({
-    name: Joi.string().required().min(3).max(50),
-    image: Joi.string().uri().allow(''),
-    restaurants: Joi.array().items(Joi.string()),
-    info: Joi.string().allow('')
-});
+export const chefCreateSchema: ObjectSchema = baseChefSchema;
+export const chefUpdateSchema: ObjectSchema = baseChefSchema;
 
-export const restaurantCreateSchema: ObjectSchema = Joi.object<IRestaurant>({
+const baseRestaurantSchema = Joi.object({
     name: Joi.string().required().min(3).max(50),
     chef: Joi.string().required(),
     openingDate: Joi.string().required().isoDate(),
@@ -42,18 +35,10 @@ export const restaurantCreateSchema: ObjectSchema = Joi.object<IRestaurant>({
     }).required()
 });
 
-export const restaurantUpdateSchema: ObjectSchema = Joi.object<IRestaurant>({
-    name: Joi.string().required().min(3).max(50),
-    chef: Joi.string().required(),
-    openingDate: Joi.string().required().isoDate(),
-    openingHours: Joi.string().required(),
-    rating: Joi.object({
-        ratingImg: Joi.string().uri(),
-        ratingNumber: Joi.number().min(0).max(5)
-    }).required()
-});
+export const restaurantCreateSchema: ObjectSchema = baseRestaurantSchema;
+export const restaurantUpdateSchema: ObjectSchema = baseRestaurantSchema;
 
-export const dishCreateSchema: ObjectSchema = Joi.object<IDishModel>({
+export const dishCreateSchema: ObjectSchema = Joi.object({
     name: Joi.string().required().min(3).max(50),
     restaurant_id: Joi.string().required(),
     ingredients: Joi.array().items(Joi.string()).required(),
