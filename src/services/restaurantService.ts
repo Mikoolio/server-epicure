@@ -25,9 +25,9 @@ const readRestaurant = async (restaurantId: string) => {
     return await Restaurant.findById(restaurantId);
 };
 
-const readAllRestaurants = async (filterBy: string) => {
+const readAllRestaurants = async (filterBy: string, offset: number, limit: number) => {
     const criteria = _buildCriteria(filterBy);
-    const restaurants = await Restaurant.find(criteria).populate('chef', 'name');
+    const restaurants = await Restaurant.find(criteria).skip(offset).limit(limit).populate('chef', 'name');
     return restaurants;
 };
 
