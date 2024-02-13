@@ -55,6 +55,7 @@ const _buildCriteria = (filterBy: string) => {
 
     switch (filterBy) {
         case 'Open Now':
+            const specificHours = ['14:00', '20:00'];
             return {
                 $expr: {
                     $let: {
@@ -66,20 +67,10 @@ const _buildCriteria = (filterBy: string) => {
                         in: {
                             $and: [
                                 {
-                                    $gte: [
-                                        currentTime,
-                                        {
-                                            $arrayElemAt: ['$$opening_hours', 0]
-                                        }
-                                    ]
+                                    $gte: [currentTime, specificHours[0]]
                                 },
                                 {
-                                    $lte: [
-                                        currentTime,
-                                        {
-                                            $arrayElemAt: ['$$opening_hours', 1]
-                                        }
-                                    ]
+                                    $lte: [currentTime, specificHours[1]]
                                 }
                             ]
                         }
