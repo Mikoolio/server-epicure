@@ -24,10 +24,12 @@ const readRestaurant = async (req: Request, res: Response, next: NextFunction) =
         next(error);
     }
 };
-
 const readAllRestaurants = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const restaurants = await restaurantService.readAllRestaurants();
+        const filterBy = req.query.filterBy as string;
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 12;
+        const restaurants = await restaurantService.readAllRestaurants(filterBy, offset, limit);
         res.status(200).send({ restaurants });
     } catch (error) {
         next(error);

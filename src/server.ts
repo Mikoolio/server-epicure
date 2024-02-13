@@ -43,9 +43,10 @@ const StartServer = () => {
 
         next();
     });
-    app.use('/restaurant', restaurantRoutes);
-    app.use('/chef', chefRoutes);
-    app.use('/dish', dishRoutes);
+
+    app.use('/api/restaurants', restaurantRoutes);
+    app.use('/api/chefs', chefRoutes);
+    app.use('/api/dishes', dishRoutes);
 
     app.use((req, res, next) => {
         const error = new Error('Not found');

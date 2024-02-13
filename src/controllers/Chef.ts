@@ -16,7 +16,6 @@ const readChef = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const chef = await chefService.readChef(chefId);
         if (chef) {
-            console.log(chef);
             res.status(200).send({ chef });
         } else {
             res.status(404).send({ message: 'Not found' });
