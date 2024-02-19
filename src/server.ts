@@ -51,7 +51,6 @@ const StartServer = () => {
     app.use((req, res, next) => {
         const error = new Error('Not found');
         Logging.error(error);
-
         next(error);
     });
 

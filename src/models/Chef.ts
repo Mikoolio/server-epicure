@@ -7,6 +7,8 @@ interface IChefRestaurant {
 export interface IChef {
     name: string;
     image: string;
+    rating: number;
+    date_added: string;
     restaurants: IChefRestaurant[];
     info: string;
 }
@@ -17,6 +19,8 @@ const chefSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
         image: { type: String, required: true },
+        rating: { type: Number, required: true },
+        date_added: { type: String, required: true },
         restaurants: [{ type: Schema.Types.ObjectId, ref: 'Restaurant', required: false }],
         info: { type: String, required: false }
     },

@@ -22,7 +22,7 @@ const createRestaurant = async (
 };
 
 const readRestaurant = async (restaurantId: string) => {
-    return await Restaurant.findById(restaurantId);
+    return await Restaurant.findById(restaurantId).populate('chef', 'name');
 };
 
 const readAllRestaurants = async (filterBy: string, offset: number, limit: number) => {
@@ -55,26 +55,47 @@ const _buildCriteria = (filterBy: string) => {
 
     switch (filterBy) {
         case 'Open Now':
-            const specificHours = ['14:00', '20:00'];
+            const specificHours = ['14:00', '15:00'];
             return {
                 $expr: {
-                    $let: {
-                        vars: {
-                            opening_hours: {
-                                $split: ['$opening_hours', ' - ']
-                            }
+                    $and: [
+                        {
+                            $gte: [
+                                currentTime,
+                                {
+                                    $arrayElemAt: [
+                                        {
+                                            $split: [
+                                                {
+                                                    $arrayElemAt: [{ $split: ['$opening_hours', ' - '] }, 0]
+                                                },
+                                                ':'
+                                            ]
+                                        },
+                                        0
+                                    ]
+                                }
+                            ]
                         },
-                        in: {
-                            $and: [
+                        {
+                            $lte: [
+                                currentTime,
                                 {
-                                    $gte: [currentTime, specificHours[0]]
-                                },
-                                {
-                                    $lte: [currentTime, specificHours[1]]
+                                    $arrayElemAt: [
+                                        {
+                                            $split: [
+                                                {
+                                                    $arrayElemAt: [{ $split: ['$opening_hours', ' - '] }, 1]
+                                                },
+                                                ':'
+                                            ]
+                                        },
+                                        0
+                                    ]
                                 }
                             ]
                         }
-                    }
+                    ]
                 }
             };
 
@@ -97,7 +118,7 @@ const _buildCriteria = (filterBy: string) => {
 
         case 'Most Popular':
             return {
-                'rating.number': 5
+                'rating.number': { $in: [5, 4] }
             };
 
         default:

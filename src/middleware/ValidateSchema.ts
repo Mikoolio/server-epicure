@@ -17,6 +17,8 @@ export const ValidateSchema = (schema: ObjectSchema) => {
 const baseChefSchema = Joi.object({
     name: Joi.string().required().min(3).max(50),
     image: Joi.string().uri().allow(''),
+    rating: Joi.number().required().min(0),
+    date_added: Joi.string().required().isoDate(),
     restaurants: Joi.array().items(Joi.string()),
     info: Joi.string().allow('')
 });
