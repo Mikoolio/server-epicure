@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import chefService from '../services/chefService';
 
 const createChef = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, image, restaurant, info } = req.body;
+    const { name, image, restaurant, info, rating, date_added } = req.body;
     try {
-        const savedChef = await chefService.createChef(name, image, restaurant, info);
+        const savedChef = await chefService.createChef(name, image, restaurant, info, rating, date_added);
         res.status(201).send({ chef: savedChef });
     } catch (error) {
         next(error);
@@ -27,7 +27,8 @@ const readChef = async (req: Request, res: Response, next: NextFunction) => {
 
 const readAllChefs = async (req: Request, res: Response) => {
     try {
-        const chefs = await chefService.readAllChefs();
+        const filterBy = req.query.filterBy as string;
+        const chefs = await chefService.readAllChefs(filterBy);
         res.status(200).send({ chefs });
     } catch (error) {
         res.status(500).send({ error });
